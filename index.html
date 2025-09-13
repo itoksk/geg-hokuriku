@@ -189,6 +189,7 @@
             background: var(--ink) !important;
         }
         
+        .card-shadow:hover > h2,
         .card-shadow:hover > h3,
         .card-shadow:hover > h4,
         .card-shadow:hover > h5,
@@ -251,8 +252,13 @@
             opacity: 0.9;
         }
         
-        /* Keep text in colored badges white */
+        /* Keep text in colored badges black for cyan and coral (light colors) */
         .card-shadow:hover .bg-cyan-400 *,
+        .card-shadow:hover .bg-coral-400 * {
+            color: black !important;
+        }
+        
+        /* Keep text in dark colored badges white */
         .card-shadow:hover .bg-purple-400 *,
         .card-shadow:hover .bg-pink-400 *,
         .card-shadow:hover .bg-blue-400 *,
@@ -1594,7 +1600,7 @@
                     </ul>
                 </div>
                 <div>
-                    <div class="text-6xl mb-4">🌟</div>
+                    <div class="text-6xl mb-4"><span class="material-icons" style="font-size: 60px;">auto_awesome</span></div>
                     <h3 class="text-xl font-bold mb-2">次のステップ</h3>
                     <ul class="text-sm text-left">
                         <li>• 実務での活用</li>
