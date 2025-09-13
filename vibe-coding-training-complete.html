@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バイブコーディング完全研修資料 - AIと協働する実践開発ガイド</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=Space+Grotesk:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --ink: #0A0E27;
+            --paper: #FEFEF8;
+            --electric: #00F0FF;
+            --coral: #FF6B6B;
+            --violet: #7C3AED;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        
+        body {
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            background-color: var(--paper);
+            color: var(--ink);
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 2px,
+                rgba(10, 14, 39, 0.01) 2px,
+                rgba(10, 14, 39, 0.01) 4px
+            );
+            z-index: 1;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .number-label {
+            font-family: 'Space Grotesk', monospace;
+        }
+        
+        .card-shadow {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-shadow::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 100%;
+            height: 100%;
+            background: var(--ink);
+            z-index: -1;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-shadow:hover::before {
+            top: 8px;
+            left: 8px;
+        }
+        
+        .card-shadow:hover {
+            transform: translate(-4px, -4px);
+        }
+        
+        .section-number {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 8rem;
+            font-weight: 700;
+            position: absolute;
+            opacity: 0.05;
+            z-index: -1;
+            top: -2rem;
+            left: -2rem;
+        }
+        
+        .code-block {
+            background: #1a1a1a;
+            color: #00F0FF;
+            padding: 1.5rem;
+            border-radius: 4px;
+            font-family: 'Space Grotesk', monospace;
+            overflow-x: auto;
+            border: 2px solid var(--ink);
+            position: relative;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--electric);
+            color: var(--ink);
+            border: none;
+            padding: 8px 16px;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-button:hover {
+            background: var(--coral);
+            transform: translateY(-2px);
+        }
+        
+        .practice-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .badge-essential {
+            background: var(--coral);
+            color: white;
+        }
+        
+        .badge-recommended {
+            background: var(--electric);
+            color: var(--ink);
+        }
+        
+        .badge-advanced {
+            background: var(--violet);
+            color: white;
+        }
+        
+        .good-practice {
+            border-left: 4px solid var(--success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+        
+        .bad-practice {
+            border-left: 4px solid var(--danger);
+            background: rgba(239, 68, 68, 0.05);
+        }
+        
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--electric);
+            border: 2px solid var(--ink);
+            border-radius: 50%;
+        }
+        
+        .hover-invert {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-invert:hover {
+            background: var(--ink);
+            color: var(--paper) !important;
+        }
+        
+        .hover-invert:hover * {
+            color: var(--paper) !important;
+        }
+        
+        /* Card shadow hover effects with proper text color */
+        .card-shadow:hover {
+            background: var(--ink) !important;
+        }
+        
+        .card-shadow:hover > h3,
+        .card-shadow:hover > h4,
+        .card-shadow:hover > h5,
+        .card-shadow:hover > p,
+        .card-shadow:hover > span:not(.practice-badge),
+        .card-shadow:hover > strong,
+        .card-shadow:hover > li,
+        .card-shadow:hover > a {
+            color: var(--paper) !important;
+        }
+        
+        /* Direct children text elements */
+        .card-shadow:hover > div:not([class*="bg-"]):not(.good-practice):not(.bad-practice) {
+            color: var(--paper) !important;
+        }
+        
+        .card-shadow:hover > div:not([class*="bg-"]):not(.good-practice):not(.bad-practice) h3,
+        .card-shadow:hover > div:not([class*="bg-"]):not(.good-practice):not(.bad-practice) h4,
+        .card-shadow:hover > div:not([class*="bg-"]):not(.good-practice):not(.bad-practice) h5,
+        .card-shadow:hover > div:not([class*="bg-"]):not(.good-practice):not(.bad-practice) p,
+        .card-shadow:hover > div:not([class*="bg-"]):not(.good-practice):not(.bad-practice) span:not(.practice-badge),
+        .card-shadow:hover > div:not([class*="bg-"]):not(.good-practice):not(.bad-practice) li,
+        .card-shadow:hover > div:not([class*="bg-"]):not(.good-practice):not(.bad-practice) strong {
+            color: var(--paper) !important;
+        }
+        
+        /* Keep practice badges with their original colors */
+        .card-shadow:hover .practice-badge {
+            opacity: 0.9;
+        }
+        
+        /* Good/bad practice blocks - keep readable contrast */
+        .card-shadow:hover .good-practice {
+            background: rgba(16, 185, 129, 0.9) !important;
+            border-left-color: #10B981 !important;
+        }
+        
+        .card-shadow:hover .bad-practice {
+            background: rgba(239, 68, 68, 0.9) !important;
+            border-left-color: #EF4444 !important;
+        }
+        
+        /* Keep text in colored backgrounds readable */
+        .card-shadow:hover .good-practice *,
+        .card-shadow:hover .bad-practice * {
+            color: white !important;
+        }
+        
+        /* Colored number badges - keep their background colors */
+        .card-shadow:hover .bg-cyan-400,
+        .card-shadow:hover .bg-coral-400,
+        .card-shadow:hover .bg-violet-400,
+        .card-shadow:hover .bg-purple-400,
+        .card-shadow:hover .bg-pink-400,
+        .card-shadow:hover .bg-indigo-400,
+        .card-shadow:hover .bg-blue-400,
+        .card-shadow:hover .bg-green-400,
+        .card-shadow:hover .bg-orange-400,
+        .card-shadow:hover .bg-red-500 {
+            opacity: 0.9;
+        }
+        
+        /* Keep text in colored badges white */
+        .card-shadow:hover .bg-cyan-400 *,
+        .card-shadow:hover .bg-purple-400 *,
+        .card-shadow:hover .bg-pink-400 *,
+        .card-shadow:hover .bg-blue-400 *,
+        .card-shadow:hover .bg-green-400 *,
+        .card-shadow:hover .bg-orange-400 *,
+        .card-shadow:hover .bg-red-500 * {
+            color: white !important;
+        }
+        
+        /* Gradient backgrounds - maintain visibility */
+        .card-shadow:hover .bg-gradient-to-r {
+            opacity: 0.95;
+        }
+        
+        /* Code blocks - maintain readability */
+        .card-shadow:hover .code-block {
+            background: #1a1a1a !important;
+            border-color: var(--paper) !important;
+        }
+        
+        .card-shadow:hover .code-block pre {
+            color: #00F0FF !important;
+        }
+        
+        /* Light colored backgrounds - DO NOT change on hover */
+        .card-shadow:hover .bg-blue-50,
+        .card-shadow:hover .bg-purple-50,
+        .card-shadow:hover .bg-pink-50,
+        .card-shadow:hover .bg-cyan-50,
+        .card-shadow:hover .bg-violet-50,
+        .card-shadow:hover .bg-indigo-50,
+        .card-shadow:hover .bg-green-50,
+        .card-shadow:hover .bg-yellow-50,
+        .card-shadow:hover .bg-gray-50,
+        .card-shadow:hover .bg-red-50,
+        .card-shadow:hover .bg-orange-50 {
+            /* Keep original light background */
+            background-color: inherit !important;
+        }
+        
+        /* Table cells with colored backgrounds - special handling */
+        .card-shadow:hover td.bg-green-50 {
+            background-color: rgb(240 253 244) !important;
+        }
+        .card-shadow:hover td.bg-yellow-50 {
+            background-color: rgb(254 252 232) !important;
+        }
+        .card-shadow:hover td.bg-red-50 {
+            background-color: rgb(254 242 242) !important;
+        }
+        .card-shadow:hover td.bg-orange-50 {
+            background-color: rgb(255 247 237) !important;
+        }
+        .card-shadow:hover td.bg-gray-100 {
+            background-color: rgb(243 244 246) !important;
+        }
+        
+        /* Text in light backgrounds stays dark on hover */
+        .card-shadow:hover .bg-blue-50,
+        .card-shadow:hover .bg-blue-50 *,
+        .card-shadow:hover .bg-purple-50,
+        .card-shadow:hover .bg-purple-50 *,
+        .card-shadow:hover .bg-pink-50,
+        .card-shadow:hover .bg-pink-50 *,
+        .card-shadow:hover .bg-cyan-50,
+        .card-shadow:hover .bg-cyan-50 *,
+        .card-shadow:hover .bg-violet-50,
+        .card-shadow:hover .bg-violet-50 *,
+        .card-shadow:hover .bg-indigo-50,
+        .card-shadow:hover .bg-indigo-50 *,
+        .card-shadow:hover .bg-green-50,
+        .card-shadow:hover .bg-green-50 *,
+        .card-shadow:hover .bg-yellow-50,
+        .card-shadow:hover .bg-yellow-50 *,
+        .card-shadow:hover .bg-gray-50,
+        .card-shadow:hover .bg-gray-50 *,
+        .card-shadow:hover .bg-red-50,
+        .card-shadow:hover .bg-red-50 *,
+        .card-shadow:hover .bg-orange-50,
+        .card-shadow:hover .bg-orange-50 *,
+        .card-shadow:hover td.bg-green-50,
+        .card-shadow:hover td.bg-green-50 * {
+            color: inherit !important;
+        }
+        
+        /* Keep border colors visible with appropriate contrast */
+        .card-shadow:hover .border-blue-400 {
+            border-color: rgb(96, 165, 250) !important;
+        }
+        .card-shadow:hover .border-purple-400 {
+            border-color: rgb(192, 132, 252) !important;
+        }
+        .card-shadow:hover .border-pink-400 {
+            border-color: rgb(244, 114, 182) !important;
+        }
+        .card-shadow:hover .border-cyan-400 {
+            border-color: rgb(34, 211, 238) !important;
+        }
+        .card-shadow:hover .border-indigo-400 {
+            border-color: rgb(129, 140, 248) !important;
+        }
+        .card-shadow:hover .border-green-400 {
+            border-color: rgb(74, 222, 128) !important;
+        }
+        .card-shadow:hover .border-yellow-400 {
+            border-color: rgb(250, 204, 21) !important;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, var(--electric), var(--violet));
+            transition: width 0.3s ease;
+        }
+        
+        @media print {
+            body::before {
+                display: none;
+            }
+            .card-shadow::before {
+                display: none;
+            }
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-1 w-full bg-white/95 backdrop-blur-sm shadow-sm z-40">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold number-label">VIBE CODING TRAINING</h1>
+            <div class="flex gap-4 text-sm">
+                <a href="#intro" class="hover:underline underline-offset-4 transition-all">導入</a>
+                <a href="#gemini" class="hover:underline underline-offset-4 transition-all">Gemini編</a>
+                <a href="#ai-studio" class="hover:underline underline-offset-4 transition-all">AI Studio編</a>
+                <a href="#practice" class="hover:underline underline-offset-4 transition-all">実践</a>
+                <a href="#tips" class="hover:underline underline-offset-4 transition-all">コツ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="container mx-auto px-6 pt-32 pb-20">
+        <div class="text-center">
+            <div class="inline-block bg-cyan-400 text-black px-4 py-1 mb-6 transform -rotate-1 number-label">
+                <span class="text-sm font-bold">COMPLETE EDITION 2025</span>
+            </div>
+            <h1 class="text-6xl lg:text-7xl font-black mb-6" style="font-family: 'Bebas Neue', sans-serif;">
+                VIBE CODING<br>
+                TRAINING
+            </h1>
+            <p class="text-2xl lg:text-3xl font-bold mb-4">
+                バイブコーディング完全研修資料
+            </p>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                Gemini実践ワークとGoogle AI Studio Build機能を使った<br>
+                AIと協働する新時代の開発手法を完全マスター
+            </p>
+        </div>
+        
+        <!-- Statistics -->
+        <div class="flex justify-center gap-12 mt-12">
+            <div class="text-center">
+                <div class="text-4xl font-bold number-label" style="color: var(--coral);">2</div>
+                <div class="text-sm">つのツール</div>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-bold number-label" style="color: var(--electric);">3</div>
+                <div class="text-sm">つのコツ</div>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-bold number-label" style="color: var(--violet);">∞</div>
+                <div class="text-sm">可能性</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Table of Contents -->
+    <section class="container mx-auto px-6 mb-20">
+        <div class="bg-white border-2 border-black p-8 card-shadow">
+            <h2 class="text-2xl font-bold mb-6 number-label">研修内容</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold mb-4">パート1：Geminiでバイブコーディング</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li>• バイブコーディングの基礎理解</li>
+                        <li>• 効果的なプロンプトテクニック</li>
+                        <li>• デザインのコツと実践</li>
+                        <li>• Geminiを使った実践開発</li>
+                        <li>• Google Sitesへの埋め込み</li>
+                        <li>• 共有権限の制御</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-4">パート2：Google AI Studio Build</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li>• Build機能の概要と特徴</li>
+                        <li>• 瞬間アプリ生成テクニック</li>
+                        <li>• プロトタイピング実践</li>
+                        <li>• 生成されたコードのカスタマイズ</li>
+                        <li>• デプロイと共有方法</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 1: Introduction -->
+    <section id="intro" class="container mx-auto px-6 py-20 relative">
+        <span class="section-number">01</span>
+        <div class="mb-12">
+            <div class="inline-block bg-black text-white px-3 py-1 mb-4">
+                <span class="text-xs font-bold tracking-widest">INTRODUCTION</span>
+            </div>
+            <h2 class="text-4xl font-bold mb-6">バイブコーディングとは</h2>
+            <p class="text-lg text-gray-600">AIツールと対話しながら開発する新しいアプローチ</p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6 mb-12">
+            <div class="bg-white border-2 border-black p-6 card-shadow">
+                <div class="w-10 h-10 bg-cyan-400 flex items-center justify-center mb-4">
+                    <span class="font-bold number-label text-black">1</span>
+                </div>
+                <h3 class="text-xl font-bold mb-4">AIとの協働</h3>
+                <p class="text-sm">プログラミング知識不要。自然言語（日本語）で指示を出すだけでアプリが完成</p>
+            </div>
+
+            <div class="bg-white border-2 border-black p-6 card-shadow">
+                <div class="w-10 h-10 bg-coral-400 flex items-center justify-center mb-4">
+                    <span class="font-bold number-label text-black">2</span>
+                </div>
+                <h3 class="text-xl font-bold mb-4">高速プロトタイピング</h3>
+                <p class="text-sm">アイデアを数分で形に。MVPを素早く作成し、フィードバックを得られる</p>
+            </div>
+
+            <div class="bg-white border-2 border-black p-6 card-shadow">
+                <div class="w-10 h-10 bg-violet-400 flex items-center justify-center mb-4">
+                    <span class="font-bold number-label text-white">3</span>
+                </div>
+                <h3 class="text-xl font-bold mb-4">段階的改善</h3>
+                <p class="text-sm">完璧を求めず、動くものから始めて徐々に改善していくアプローチ</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Gemini Vibe Coding -->
+    <section id="gemini" class="container mx-auto px-6 py-20 relative bg-gray-50">
+        <span class="section-number">02</span>
+        <div class="mb-12">
+            <div class="inline-block bg-black text-white px-3 py-1 mb-4">
+                <span class="text-xs font-bold tracking-widest">PART 1</span>
+            </div>
+            <h2 class="text-4xl font-bold mb-6">Geminiでバイブコーディング実践</h2>
+            <p class="text-lg text-gray-600">プロンプトエンジニアリングの極意とGoogle Sites連携</p>
+        </div>
+
+        <!-- Vibe Coding Tips -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold mb-6"><span class="material-icons" style="vertical-align: middle;">tips_and_updates</span> バイブコーディングのコツ（完全版）</h3>
+            
+            <div class="space-y-8">
+                <!-- Tip 1: Hearing -->
+                <div class="bg-white border-2 border-black p-8 card-shadow">
+                    <div class="flex items-start gap-6">
+                        <div class="w-16 h-16 bg-cyan-400 flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl font-bold number-label">01</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold mb-2">AIに「ヒアリング」させる</h4>
+                            <span class="practice-badge badge-essential">ESSENTIAL</span>
+                            
+                            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                                <div class="bad-practice p-4 rounded">
+                                    <strong class="text-red-700">❌ 悪い例</strong>
+                                    <pre class="text-sm mt-2 whitespace-pre-wrap">「血液シミュレーターを作って」</pre>
+                                </div>
+                                <div class="good-practice p-4 rounded">
+                                    <strong class="text-green-700"><span class="material-icons" style="font-size: 16px; vertical-align: middle;">check_circle</span> 良い例</strong>
+                                    <pre class="text-sm mt-2 whitespace-pre-wrap">「中学校の保健の授業で血液成分を教えるためのツールを作りたいです。
+他に要件をまとめるために、私にヒアリングをしてください。」</pre>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 p-4 bg-blue-50 border border-blue-400 rounded">
+                                <strong><span class="material-icons" style="font-size: 16px; vertical-align: middle;">lightbulb</span> ポイント：</strong>AIに質問させることで、自分でも気づかなかった要件が明確になります
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tip 2: Design -->
+                <div class="bg-white border-2 border-black p-8 card-shadow">
+                    <div class="flex items-start gap-6">
+                        <div class="w-16 h-16 bg-coral-400 flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl font-bold number-label">02</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold mb-2">デザインで「煽る」テクニック</h4>
+                            <span class="practice-badge badge-recommended">RECOMMENDED</span>
+                            
+                            <div class="mt-6">
+                                <div class="code-block">
+                                    <button class="copy-button" onclick="copyCode(this)">COPY</button>
+                                    <pre>効果的なプロンプト：
+「モダンでかっこいい、教育現場らしい親しみやすさもある、
+限界を超えたUIを作ってください！パステルカラーで、
+中学生も喜ぶようなデザインにしてください！」</pre>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 grid md:grid-cols-2 gap-4">
+                                <div class="p-3 bg-yellow-50 border border-yellow-400 rounded">
+                                    <strong>効果的な煽り言葉</strong>
+                                    <ul class="text-sm mt-2">
+                                        <li>• 限界を超えた</li>
+                                        <li>• プロ級の</li>
+                                        <li>• 最高にかっこいい</li>
+                                    </ul>
+                                </div>
+                                <div class="p-3 bg-green-50 border border-green-400 rounded">
+                                    <strong>避けるべき表現</strong>
+                                    <ul class="text-sm mt-2">
+                                        <li>• シンプルで</li>
+                                        <li>• 普通の</li>
+                                        <li>• 適当に</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tip 3: MVP -->
+                <div class="bg-white border-2 border-black p-8 card-shadow">
+                    <div class="flex items-start gap-6">
+                        <div class="w-16 h-16 bg-violet-400 flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl font-bold number-label">03</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold mb-2">MVP思考：機能は2つまで！</h4>
+                            <span class="practice-badge badge-essential">ESSENTIAL</span>
+                            
+                            <div class="mt-6">
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="bad-practice p-4 rounded">
+                                        <strong class="text-red-700">❌ 失敗パターン</strong>
+                                        <p class="text-sm mt-2">「生徒管理も、成績管理も、連絡帳も、時間割も...」</p>
+                                        <p class="text-sm text-red-600 mt-2">→ 完成しない</p>
+                                    </div>
+                                    <div class="good-practice p-4 rounded">
+                                        <strong class="text-green-700"><span class="material-icons" style="font-size: 16px; vertical-align: middle;">check_circle</span> 成功パターン</strong>
+                                        <p class="text-sm mt-2">「血液成分の動きを見る」「クリックで説明表示」</p>
+                                        <p class="text-sm text-green-600 mt-2">→ 60分で完成！</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Design Tips Section -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold mb-6"><span class="material-icons" style="vertical-align: middle;">palette</span> デザインが垢抜けるコツ</h3>
+            
+            <div class="p-4 bg-purple-50 border border-purple-400 rounded mb-6">
+                <p class="text-sm mb-2">参考：<a href="https://listen.style/p/freelance-gakkou/2en50iar" target="_blank" class="text-purple-600 underline">バイブコーディングで使える！デザインが垢抜けるコツ - フリーランスの学校</a></p>
+                <p class="text-sm">参考：<a href="https://x.com/rocomodesign/status/1962294329214636254" target="_blank" class="text-purple-600 underline">影を使った立体感の演出テクニック - @rocomodesign</a></p>
+            </div>
+            
+            <div class="space-y-8">
+                <!-- Tip 1: Icons instead of Emojis -->
+                <div class="bg-white border-2 border-black p-8 card-shadow">
+                    <div class="flex items-start gap-6">
+                        <div class="w-16 h-16 bg-purple-400 flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl font-bold number-label text-white">01</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold mb-2">絵文字をアイコンに差し替える</h4>
+                            <span class="practice-badge badge-essential">ESSENTIAL</span>
+                            
+                            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                                <div class="bad-practice p-4 rounded">
+                                    <strong class="text-red-700">❌ 問題点</strong>
+                                    <ul class="text-sm mt-2 space-y-1">
+                                        <li>• 絵文字で色数が増えてノイズに</li>
+                                        <li>• 3D絵文字がフラットデザインと不調和</li>
+                                        <li>• 世界観が崩れて素人っぽく見える</li>
+                                    </ul>
+                                </div>
+                                <div class="good-practice p-4 rounded">
+                                    <strong class="text-green-700"><span class="material-icons" style="font-size: 16px; vertical-align: middle;">check_circle</span> 解決法</strong>
+                                    <ul class="text-sm mt-2 space-y-1">
+                                        <li>• <a href="https://fonts.google.com/icons" target="_blank" class="text-blue-600 underline">Google Icons</a>を使用</li>
+                                        <li>• フラットなアイコンで統一感</li>
+                                        <li>• 配色を崩さず洗練された印象に</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 p-4 bg-purple-50 border border-purple-400 rounded">
+                                <strong><span class="material-icons" style="font-size: 16px; vertical-align: middle;">lightbulb</span> 実装例：</strong>
+                                <div class="code-block mt-2">
+                                    <button class="copy-button" onclick="copyCode(this)">COPY</button>
+                                    <pre>「Google Iconsのサイト（https://fonts.google.com/icons）から
+適切なアイコンを選んで、絵文字と差し替えてください。
+フラットなデザインで統一感を出してください。」</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tip 2: Typography -->
+                <div class="bg-white border-2 border-black p-8 card-shadow">
+                    <div class="flex items-start gap-6">
+                        <div class="w-16 h-16 bg-pink-400 flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl font-bold number-label text-white">02</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold mb-2">タイトルで個性を出す</h4>
+                            <span class="practice-badge badge-recommended">RECOMMENDED</span>
+                            
+                            <div class="mt-6">
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                        <strong class="text-purple-700">フォントの工夫</strong>
+                                        <ul class="text-sm mt-2 space-y-1">
+                                            <li>• Google Fontsから個性的なフォント選択</li>
+                                            <li>• サイトの雰囲気に合った書体</li>
+                                            <li>• 日本語フォントも豊富に利用可能</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <strong class="text-purple-700">文字間の調整</strong>
+                                        <ul class="text-sm mt-2 space-y-1">
+                                            <li>• letter-spacingで文字間を広げる</li>
+                                            <li>• ゆったりした印象でタイトル感UP</li>
+                                            <li>• 本文との差別化を明確に</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 p-4 bg-pink-50 border border-pink-400 rounded">
+                                    <strong><span class="material-icons" style="font-size: 16px; vertical-align: middle;">lightbulb</span> 実装例：</strong>
+                                    <div class="code-block mt-2">
+                                        <button class="copy-button" onclick="copyCode(this)">COPY</button>
+                                        <pre>「タイトルにGoogle Fontsから印象的なフォントを使用してください。
+文字間（letter-spacing）を0.1emくらい広げて、
+ゆったりとした高級感のある見た目にしてください。」</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tip 3: Shadows -->
+                <div class="bg-white border-2 border-black p-8 card-shadow">
+                    <div class="flex items-start gap-6">
+                        <div class="w-16 h-16 bg-indigo-400 flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl font-bold number-label text-white">03</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold mb-2">影で立体感を演出する</h4>
+                            <span class="practice-badge badge-advanced">ADVANCED</span>
+                            
+                            <div class="mt-6">
+                                <div class="grid md:grid-cols-3 gap-4 mb-6">
+                                    <div class="p-3 bg-gray-50 rounded border">
+                                        <strong class="text-sm">ベーシックな影</strong>
+                                        <p class="text-xs mt-1">シンプルで読みやすさ重視</p>
+                                        <ul class="text-xs mt-2 space-y-1">
+                                            <li>• ドロップシャドウ</li>
+                                            <li>• シャープシャドウ</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-3 bg-gray-50 rounded border">
+                                        <strong class="text-sm">遊び心のある影</strong>
+                                        <p class="text-xs mt-1">個性的なアクセント</p>
+                                        <ul class="text-xs mt-2 space-y-1">
+                                            <li>• ずらし影</li>
+                                            <li>• ストライプ影</li>
+                                        </ul>
+                                    </div>
+                                    <div class="p-3 bg-gray-50 rounded border">
+                                        <strong class="text-sm">演出用の影</strong>
+                                        <p class="text-xs mt-1">存在感を強調</p>
+                                        <ul class="text-xs mt-2 space-y-1">
+                                            <li>• ロングシャドウ</li>
+                                            <li>• 鏡面反射</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-4 bg-indigo-50 border border-indigo-400 rounded">
+                                    <strong><span class="material-icons" style="font-size: 16px; vertical-align: middle;">lightbulb</span> 実装例：</strong>
+                                    <div class="code-block mt-2">
+                                        <button class="copy-button" onclick="copyCode(this)">COPY</button>
+                                        <pre>「見出しやカードにbox-shadowで立体感を出してください。
+例：box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+ホバー時に影を深くして、インタラクティブな演出も追加してください。」</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Design Sample -->
+                <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-8 rounded-lg border-2 border-black">
+                    <h4 class="text-xl font-bold mb-4"><span class="material-icons" style="vertical-align: middle;">auto_awesome</span> デザイン改善のBefore/After</h4>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded border-2 border-gray-300">
+                            <h5 class="font-bold text-red-600 mb-3">❌ Before（初期状態）</h5>
+                            <div class="space-y-3">
+                                <div class="p-3 bg-gray-50 rounded">
+                                    <p class="text-xl"><span class="material-icons" style="vertical-align: middle;">menu_book</span> 学習管理ツール</p>
+                                    <p class="text-sm mt-2">デフォルトフォント・絵文字多用</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <span>🏫 学校</span>
+                                    <span><span class="material-icons" style="font-size: 16px; vertical-align: middle;">school</span> 教材</span>
+                                    <span>✏️ 課題</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded border-2 border-green-400">
+                            <h5 class="font-bold text-green-600 mb-3"><span class="material-icons" style="font-size: 20px; vertical-align: middle;">check_circle</span> After（改善後）</h5>
+                            <div class="space-y-3">
+                                <div class="p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded" style="box-shadow: 4px 4px 0 rgba(124, 58, 237, 0.2);">
+                                    <p class="text-xl font-bold" style="font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.1em;">学習管理ツール</p>
+                                    <p class="text-sm mt-2">カスタムフォント・アイコン統一</p>
+                                </div>
+                                <div class="flex gap-4">
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z"/></svg>
+                                        学校
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1z"/></svg>
+                                        教材
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                                        課題
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-white/80 rounded">
+                        <p class="text-sm"><strong>改善ポイント：</strong></p>
+                        <ul class="text-sm mt-2 space-y-1">
+                            <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> 絵文字 → Google Iconsのフラットアイコンに変更</li>
+                            <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> デフォルトフォント → 個性的なフォント + letter-spacing調整</li>
+                            <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> フラットなデザイン → box-shadowで立体感を追加</li>
+                            <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> 単調な配色 → グラデーションで深みを演出</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gemini Prompt Examples -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold mb-6"><span class="material-icons" style="vertical-align: middle;">description</span> Gemini実践プロンプト集</h3>
+            
+            <div class="space-y-6">
+                <div class="bg-white border-2 border-black p-6">
+                    <h4 class="font-bold mb-3">基本テンプレート</h4>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)">COPY</button>
+                        <pre>「[対象ユーザー]向けの[アプリの種類]を作成してください。
+
+【必要な機能】
+1. [機能1]
+2. [機能2]
+
+【デザイン要件】
+- Tailwind CSS CDNを使用
+- [色やスタイルの希望]
+- スマホでも見やすく
+
+【技術要件】
+- 1つのHTMLファイルで完結
+- Google Sitesに埋め込み可能
+- 外部ライブラリは最小限」</pre>
+                    </div>
+                </div>
+
+                <div class="bg-white border-2 border-black p-6">
+                    <h4 class="font-bold mb-3">段階的改善プロンプト</h4>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)">COPY</button>
+                        <pre>第1段階：「基本機能だけ実装してください」
+第2段階：「デザインをもっとモダンに改善してください」
+第3段階：「アニメーションを追加してください」
+第4段階：「レスポンシブ対応してください」</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Google Sites Integration -->
+        <div class="bg-black text-white p-8 rounded-lg">
+            <h3 class="text-2xl font-bold mb-6" style="color: var(--electric);">🌐 Google Sites埋め込みワーク</h3>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold mb-4" style="color: var(--electric);">埋め込み手順</h4>
+                    <ol class="space-y-2 text-sm">
+                        <li>1. Google Sitesで新規サイト作成</li>
+                        <li>2. 埋め込み → 埋め込みコードを選択</li>
+                        <li>3. 生成したHTMLコードを貼り付け</li>
+                        <li>4. サイズを調整して配置</li>
+                        <li>5. 公開設定で共有範囲を制御</li>
+                    </ol>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4" style="color: var(--coral);">共有権限の制御</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> 限定公開：特定のユーザーのみ</li>
+                        <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> リンク共有：URLを知っている人</li>
+                        <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> 一般公開：誰でもアクセス可能</li>
+                        <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> 編集権限：共同編集者の設定</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-6 p-4 bg-gray-800 rounded">
+                <strong style="color: var(--electric);"><span class="material-icons" style="font-size: 16px; vertical-align: middle;">lightbulb</span> ワークのポイント：</strong>
+                <p class="text-sm mt-2">実際にGoogle Sitesにアプリを埋め込み、チーム内で共有設定を試してみましょう。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Google AI Studio Build -->
+    <section id="ai-studio" class="container mx-auto px-6 py-20 relative">
+        <span class="section-number">03</span>
+        <div class="mb-12">
+            <div class="inline-block bg-black text-white px-3 py-1 mb-4">
+                <span class="text-xs font-bold tracking-widest">PART 2</span>
+            </div>
+            <h2 class="text-4xl font-bold mb-6">Google AI Studio Build機能</h2>
+            <p class="text-lg text-gray-600">瞬間アプリ生成でプロトタイピングを加速</p>
+        </div>
+
+        <!-- Google AI Studio Features Overview -->
+        <div class="mb-12">
+            <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-8 rounded-lg">
+                <h3 class="text-2xl font-bold mb-4"><span class="material-icons" style="vertical-align: middle;">rocket_launch</span> Google AI Studioの全機能</h3>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white/10 p-4 rounded">
+                        <h4 class="font-bold mb-2"><span class="material-icons" style="font-size: 20px; vertical-align: middle;">chat</span> Chat</h4>
+                        <p class="text-sm">対話形式でコード生成。段階的な改善や複雑なロジック構築に最適</p>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded">
+                        <h4 class="font-bold mb-2"><span class="material-icons" style="font-size: 20px; vertical-align: middle;">stream</span> Stream</h4>
+                        <p class="text-sm">リアルタイムストリーミング。長文生成や連続的な出力に対応</p>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded">
+                        <h4 class="font-bold mb-2"><span class="material-icons" style="font-size: 20px; vertical-align: middle;">build</span> Build</h4>
+                        <p class="text-sm">瞬間アプリ生成。プロンプト一つで完全なWebアプリを数秒で作成</p>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded">
+                        <h4 class="font-bold mb-2"><span class="material-icons" style="font-size: 20px; vertical-align: middle;">image</span> Create Media</h4>
+                        <p class="text-sm">画像生成機能。UIデザインやアイコン、教材用画像の作成</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Build Feature Focus -->
+        <div class="mb-12">
+            <div class="bg-white border-2 border-black p-8 card-shadow">
+                <h3 class="text-2xl font-bold mb-4"><span class="material-icons" style="vertical-align: middle;">build</span> Build機能に特化した解説</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div>
+                        <h4 class="font-bold mb-2">瞬間生成</h4>
+                        <p class="text-sm">プロンプトを入力するだけで数秒でアプリが完成</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-2">コード編集可能</h4>
+                        <p class="text-sm">生成されたコードを直接編集してカスタマイズ</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-2">即座にプレビュー</h4>
+                        <p class="text-sm">リアルタイムでプレビューしながら開発</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Build Workflow -->
+        <div class="space-y-8 mb-12">
+            <div class="bg-white border-2 border-black p-8 card-shadow">
+                <h3 class="text-2xl font-bold mb-6">Build機能ワークフロー</h3>
+                
+                <!-- Step 1 -->
+                <div class="flex items-start gap-6 mb-8">
+                    <div class="w-12 h-12 bg-blue-400 text-white flex items-center justify-center flex-shrink-0 rounded-full">
+                        <span class="font-bold">1</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-xl font-bold mb-2">アクセス＆セットアップ</h4>
+                        <div class="bg-gray-50 p-4 rounded">
+                            <ol class="space-y-2 text-sm">
+                                <li>1. <a href="https://aistudio.google.com" class="text-blue-600 underline">https://aistudio.google.com</a> にアクセス</li>
+                                <li>2. Googleアカウントでログイン</li>
+                                <li>3. 「Build an app」を選択</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flex items-start gap-6 mb-8">
+                    <div class="w-12 h-12 bg-purple-400 text-white flex items-center justify-center flex-shrink-0 rounded-full">
+                        <span class="font-bold">2</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-xl font-bold mb-2">プロンプト入力</h4>
+                        <div class="code-block">
+                            <button class="copy-button" onclick="copyCode(this)">COPY</button>
+                            <pre>効果的なBuildプロンプト例：
+
+「インタラクティブな周期表を作ってください。
+各元素をクリックすると詳細情報がポップアップで表示。
+3Dアニメーション効果付き。
+モダンで教育的なデザイン。」</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex items-start gap-6 mb-8">
+                    <div class="w-12 h-12 bg-green-400 text-white flex items-center justify-center flex-shrink-0 rounded-full">
+                        <span class="font-bold">3</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-xl font-bold mb-2">生成＆カスタマイズ</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="p-4 bg-green-50 border border-green-400 rounded">
+                                <strong>生成されるもの</strong>
+                                <ul class="text-sm mt-2">
+                                    <li>• 完全なHTMLコード</li>
+                                    <li>• スタイリング込み</li>
+                                    <li>• JavaScriptロジック</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 bg-blue-50 border border-blue-400 rounded">
+                                <strong>カスタマイズ可能</strong>
+                                <ul class="text-sm mt-2">
+                                    <li>• コード直接編集</li>
+                                    <li>• リアルタイムプレビュー</li>
+                                    <li>• 再生成も可能</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="flex items-start gap-6">
+                    <div class="w-12 h-12 bg-orange-400 text-white flex items-center justify-center flex-shrink-0 rounded-full">
+                        <span class="font-bold">4</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-xl font-bold mb-2">共有＆デプロイ</h4>
+                        <div class="bg-gray-50 p-4 rounded">
+                            <ul class="space-y-2 text-sm">
+                                <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> 共有リンクの生成</li>
+                                <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> HTMLファイルとしてダウンロード</li>
+                                <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> CodePenやGitHubへエクスポート</li>
+                                <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> Google Sitesへの埋め込み</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Build Examples -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold mb-6"><span class="material-icons" style="vertical-align: middle;">lightbulb</span> Build機能活用例</h3>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white border-2 border-black p-6 card-shadow">
+                    <span class="practice-badge badge-recommended mb-4">教育系</span>
+                    <h4 class="font-bold mb-2">化学反応シミュレーター</h4>
+                    <div class="code-block text-xs">
+                        <pre>「化学反応を視覚的に
+表示するツール。
+分子がアニメーションで
+結合・分離」</pre>
+                    </div>
+                    <p class="text-sm mt-3">生成時間：約5秒</p>
+                </div>
+
+                <div class="bg-white border-2 border-black p-6 card-shadow">
+                    <span class="practice-badge badge-recommended mb-4">管理系</span>
+                    <h4 class="font-bold mb-2">席替えジェネレーター</h4>
+                    <div class="code-block text-xs">
+                        <pre>「クラスの席替えを
+ランダムに生成。
+ドラッグ＆ドロップで
+手動調整も可能」</pre>
+                    </div>
+                    <p class="text-sm mt-3">生成時間：約3秒</p>
+                </div>
+
+                <div class="bg-white border-2 border-black p-6 card-shadow">
+                    <span class="practice-badge badge-recommended mb-4">ゲーム系</span>
+                    <h4 class="font-bold mb-2">漢字神経衰弱</h4>
+                    <div class="code-block text-xs">
+                        <pre>「漢字と読み方を
+マッチングする
+教育ゲーム。
+スコア機能付き」</pre>
+                    </div>
+                    <p class="text-sm mt-3">生成時間：約7秒</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Build Techniques -->
+        <div class="bg-gradient-to-r from-purple-100 to-blue-100 p-8 rounded-lg border-2 border-black">
+            <h3 class="text-2xl font-bold mb-6"><span class="material-icons" style="vertical-align: middle;">build</span> Build機能上級テクニック</h3>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold mb-3">反復生成戦略</h4>
+                    <ol class="space-y-2 text-sm">
+                        <li>1. 同じプロンプトで3回生成</li>
+                        <li>2. 最も良いデザインを選択</li>
+                        <li>3. 良い部分を組み合わせて編集</li>
+                        <li>4. 最終調整して完成</li>
+                    </ol>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-3">プロンプトの魔法の言葉</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>• 「プロダクションレベルの」</li>
+                        <li>• 「最新のWeb技術を使って」</li>
+                        <li>• 「アクセシビリティに配慮した」</li>
+                        <li>• 「パフォーマンス最適化された」</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Practice Workshop -->
+    <section id="practice" class="container mx-auto px-6 py-20 relative bg-gray-50">
+        <span class="section-number">04</span>
+        <div class="mb-12">
+            <div class="inline-block bg-black text-white px-3 py-1 mb-4">
+                <span class="text-xs font-bold tracking-widest">WORKSHOP</span>
+            </div>
+            <h2 class="text-4xl font-bold mb-6">実践ワークショップ</h2>
+            <p class="text-lg text-gray-600">2つのツールを使い分けて最適な開発を体験</p>
+        </div>
+
+        <!-- Workshop Timeline -->
+        <div class="bg-white border-2 border-black p-8 mb-12 card-shadow">
+            <h3 class="text-2xl font-bold mb-6"><span class="material-icons" style="vertical-align: middle;">schedule</span> ワークショップタイムライン</h3>
+            
+            <div class="relative">
+                <div class="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="timeline-dot"></div>
+                        <div class="flex-1">
+                            <span class="font-bold">イントロ＆セットアップ</span>
+                            <p class="text-sm text-gray-600">ツールの準備、アカウント確認</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4">
+                        <div class="timeline-dot"></div>
+                        <div class="flex-1">
+                            <span class="font-bold">Geminiワーク</span>
+                            <p class="text-sm text-gray-600">プロンプト作成→生成→デザイン改善→Google Sites埋め込み</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4">
+                        <div class="timeline-dot"></div>
+                        <div class="flex-1">
+                            <span class="font-bold">AI Studio Buildワーク</span>
+                            <p class="text-sm text-gray-600">Build機能でプロトタイプ作成</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4">
+                        <div class="timeline-dot"></div>
+                        <div class="flex-1">
+                            <span class="font-bold">発表＆振り返り</span>
+                            <p class="text-sm text-gray-600">成果物の共有、学びの共有</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workshop Projects -->
+        <div class="space-y-8">
+            <h3 class="text-2xl font-bold mb-6"><span class="material-icons" style="vertical-align: middle;">assignment</span> ワークショップ課題</h3>
+            
+            <!-- Gemini Project -->
+            <div class="bg-white border-2 border-black p-8 card-shadow">
+                <div class="flex items-start gap-6">
+                    <div class="w-16 h-16 bg-cyan-400 flex items-center justify-center flex-shrink-0">
+                        <span class="text-2xl font-bold number-label">A</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-xl font-bold mb-2">Gemini課題：教育支援ツール</h4>
+                        <p class="text-gray-600 mb-4">学校現場で使える実用的なツールを作成</p>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h5 class="font-bold mb-2">課題例</h5>
+                                <ul class="space-y-2 text-sm">
+                                    <li>• 出席管理システム</li>
+                                    <li>• 授業タイマー</li>
+                                    <li>• 成績計算ツール</li>
+                                    <li>• 座席表ジェネレーター</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-bold mb-2">要件</h5>
+                                <ul class="space-y-2 text-sm">
+                                    <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> 機能は2つまで</li>
+                                    <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> デザインのコツを実践</li>
+                                    <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> Google Sites埋め込み対応</li>
+                                    <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> スマホ対応</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 p-4 bg-cyan-50 border border-cyan-400 rounded">
+                            <strong class="text-gray-800">成果物：</strong><span class="text-gray-700">Google Sitesに埋め込まれた実用ツール</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Studio Build Project -->
+            <div class="bg-white border-2 border-black p-8 card-shadow">
+                <div class="flex items-start gap-6">
+                    <div class="w-16 h-16 bg-violet-400 flex items-center justify-center flex-shrink-0">
+                        <span class="text-2xl font-bold number-label text-white">B</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-xl font-bold mb-2">AI Studio Build課題：インタラクティブ教材</h4>
+                        <p class="text-gray-600 mb-4">授業で使える視覚的な教材を作成</p>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h5 class="font-bold mb-2">課題例</h5>
+                                <ul class="space-y-2 text-sm">
+                                    <li>• 化学元素周期表</li>
+                                    <li>• 歴史年表タイムライン</li>
+                                    <li>• 数学公式計算機</li>
+                                    <li>• 地理クイズゲーム</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-bold mb-2">要件</h5>
+                                <ul class="space-y-2 text-sm">
+                                    <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> ビジュアル重視</li>
+                                    <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> インタラクティブ</li>
+                                    <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> アニメーション含む</li>
+                                    <li><span class="material-icons" style="font-size: 14px; vertical-align: middle;">check</span> 瞬間生成を活用</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 p-4 bg-violet-50 border border-violet-400 rounded">
+                            <strong class="text-gray-800">成果物：</strong><span class="text-gray-700">すぐに授業で使えるインタラクティブ教材</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Tips & Best Practices -->
+    <section id="tips" class="container mx-auto px-6 py-20 relative">
+        <span class="section-number">05</span>
+        <div class="mb-12">
+            <div class="inline-block bg-black text-white px-3 py-1 mb-4">
+                <span class="text-xs font-bold tracking-widest">TIPS & TRICKS</span>
+            </div>
+            <h2 class="text-4xl font-bold mb-6">実践的なコツとベストプラクティス</h2>
+            <p class="text-lg text-gray-600">効率的に開発するための実証済みテクニック</p>
+        </div>
+
+
+        <!-- Common Mistakes -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold mb-6"><span class="material-icons" style="vertical-align: middle;">warning</span> よくある失敗と回避法</h3>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white border-2 border-black p-6 card-shadow">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-red-500 text-white flex items-center justify-center">
+                            <span class="font-bold">!</span>
+                        </div>
+                        <h4 class="text-lg font-bold">機能過多症候群</h4>
+                    </div>
+                    <div class="bad-practice p-3 rounded mb-3">
+                        <p class="text-sm">一度に10個以上の機能を実装しようとする</p>
+                    </div>
+                    <div class="good-practice p-3 rounded">
+                        <p class="text-sm">MVPは2機能まで。段階的に追加</p>
+                    </div>
+                </div>
+
+                <div class="bg-white border-2 border-black p-6 card-shadow">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-red-500 text-white flex items-center justify-center">
+                            <span class="font-bold">!</span>
+                        </div>
+                        <h4 class="text-lg font-bold">完璧主義の罠</h4>
+                    </div>
+                    <div class="bad-practice p-3 rounded mb-3">
+                        <p class="text-sm">100%完璧になるまで公開しない</p>
+                    </div>
+                    <div class="good-practice p-3 rounded">
+                        <p class="text-sm">60%動けばOK。フィードバックを得て改善</p>
+                    </div>
+                </div>
+
+                <div class="bg-white border-2 border-black p-6 card-shadow">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-red-500 text-white flex items-center justify-center">
+                            <span class="font-bold">!</span>
+                        </div>
+                        <h4 class="text-lg font-bold">プロンプト依存</h4>
+                    </div>
+                    <div class="bad-practice p-3 rounded mb-3">
+                        <p class="text-sm">1つのプロンプトに全てを詰め込む</p>
+                    </div>
+                    <div class="good-practice p-3 rounded">
+                        <p class="text-sm">段階的に詳細化。基本→装飾→最適化</p>
+                    </div>
+                </div>
+
+                <div class="bg-white border-2 border-black p-6 card-shadow">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-red-500 text-white flex items-center justify-center">
+                            <span class="font-bold">!</span>
+                        </div>
+                        <h4 class="text-lg font-bold">車輪の再発明</h4>
+                    </div>
+                    <div class="bad-practice p-3 rounded mb-3">
+                        <p class="text-sm">既存サービスと同じものを作る</p>
+                    </div>
+                    <div class="good-practice p-3 rounded">
+                        <p class="text-sm">既存ツールの隙間を埋める補助ツール</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Checklist -->
+        <div class="bg-gradient-to-r from-green-400 to-blue-500 text-white p-8 rounded-lg">
+            <h3 class="text-2xl font-bold mb-6"><span class="material-icons" style="vertical-align: middle;">checklist</span> 成功のためのチェックリスト</h3>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold mb-3">開発前</h4>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3">
+                            <input type="checkbox" class="w-5 h-5">
+                            <span>要件を明確に定義した</span>
+                        </label>
+                        <label class="flex items-center gap-3">
+                            <input type="checkbox" class="w-5 h-5">
+                            <span>MVPを2機能に絞った</span>
+                        </label>
+                        <label class="flex items-center gap-3">
+                            <input type="checkbox" class="w-5 h-5">
+                            <span>既存ツールを確認した</span>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-3">開発後</h4>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3">
+                            <input type="checkbox" class="w-5 h-5">
+                            <span>スマホで動作確認した</span>
+                        </label>
+                        <label class="flex items-center gap-3">
+                            <input type="checkbox" class="w-5 h-5">
+                            <span>エラー処理を確認した</span>
+                        </label>
+                        <label class="flex items-center gap-3">
+                            <input type="checkbox" class="w-5 h-5">
+                            <span>共有設定を確認した</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Tool Comparison -->
+    <section id="tool-comparison" class="container mx-auto px-6 py-20 relative bg-gray-50">
+        <span class="section-number">06</span>
+        <div class="mb-12">
+            <div class="inline-block bg-black text-white px-3 py-1 mb-4">
+                <span class="text-xs font-bold tracking-widest">COMPARISON</span>
+            </div>
+            <h2 class="text-4xl font-bold mb-6">AIツール詳細比較</h2>
+            <p class="text-lg text-gray-600">各AIツールの特徴・機能・設定を理解する</p>
+        </div>
+
+        <!-- Comprehensive AI Tool Comparison Table -->
+        <div class="bg-white border-2 border-black p-8 mb-12">
+            <h3 class="text-2xl font-bold mb-6"><span class="material-icons" style="vertical-align: middle;">search</span> 主要AIツール詳細比較</h3>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full border-2 border-black">
+                    <thead>
+                        <tr class="bg-black text-white">
+                            <th class="border border-white p-3 text-left">機能</th>
+                            <th class="border border-white p-3 text-center">Claude</th>
+                            <th class="border border-white p-3 text-center">ChatGPT</th>
+                            <th class="border border-white p-3 text-center">Gemini</th>
+                            <th class="border border-white p-3 text-center">Google AI Studio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-black p-3 font-bold bg-gray-100">コード生成</td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">高精度</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">高精度</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">高精度</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">Build機能で瞬間生成</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-black p-3 font-bold bg-gray-100">画像生成</td>
+                            <td class="border border-black p-3 text-center bg-red-50">×<br><span class="text-xs text-gray-600">非対応</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">DALL-E 3</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">Imagen</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">Create Media</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-black p-3 font-bold bg-gray-100">リアルタイム検索</td>
+                            <td class="border border-black p-3 text-center bg-red-50">×<br><span class="text-xs text-gray-600">非対応</span></td>
+                            <td class="border border-black p-3 text-center bg-yellow-50">○<br><span class="text-xs text-gray-600">Web Browsing</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">Google検索統合</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">Google検索統合</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-black p-3 font-bold bg-gray-100">ファイル解析</td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">多形式対応</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">多形式対応</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">Google Drive連携</span></td>
+                            <td class="border border-black p-3 text-center bg-yellow-50">○<br><span class="text-xs text-gray-600">基本的な対応</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-black p-3 font-bold bg-gray-100">音声対話</td>
+                            <td class="border border-black p-3 text-center bg-red-50">×<br><span class="text-xs text-gray-600">非対応</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">音声モード</span></td>
+                            <td class="border border-black p-3 text-center bg-yellow-50">○<br><span class="text-xs text-gray-600">モバイルアプリ</span></td>
+                            <td class="border border-black p-3 text-center bg-orange-50">△<br><span class="text-xs text-gray-600">限定的</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-black p-3 font-bold bg-gray-100">カスタムGPT/Gem</td>
+                            <td class="border border-black p-3 text-center bg-red-50">×<br><span class="text-xs text-gray-600">非対応</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">GPTs</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">Gems</span></td>
+                            <td class="border border-black p-3 text-center bg-red-50">×<br><span class="text-xs text-gray-600">非対応</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-black p-3 font-bold bg-gray-100">API提供</td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">Anthropic API</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">OpenAI API</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">Gemini API</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">統合API</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-black p-3 font-bold bg-gray-100">無料利用</td>
+                            <td class="border border-black p-3 text-center bg-yellow-50">○<br><span class="text-xs text-gray-600">制限あり</span></td>
+                            <td class="border border-black p-3 text-center bg-yellow-50">○<br><span class="text-xs text-gray-600">制限あり</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">寛容な制限</span></td>
+                            <td class="border border-black p-3 text-center bg-green-50">◎<br><span class="text-xs text-gray-600">開発者向け無料枠</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-6 text-sm text-gray-600">
+                <p><strong>凡例：</strong> ◎ 優秀 | ○ 対応 | △ 限定的 | × 非対応</p>
+            </div>
+        </div>
+        
+        <!-- Token Settings and Configuration -->
+        <div class="bg-white border-2 border-black p-8 mb-12">
+            <h3 class="text-2xl font-bold mb-6"><span class="material-icons" style="vertical-align: middle;">settings</span> トークン設定と詳細設定</h3>
+            <p class="text-sm text-gray-600 mb-4">※バイブコーディングには直接関係ありませんが、知識として</p>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-bold mb-3"><span class="material-icons" style="font-size: 20px; vertical-align: middle;">analytics</span> トークン数設定</h4>
+                    <div class="space-y-3 text-sm">
+                        <div class="p-3 bg-gray-50 rounded">
+                            <strong>Claude:</strong> 最大200,000トークン入力、4,096トークン出力
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded">
+                            <strong>ChatGPT:</strong> GPT-4で128,000トークン、出力4,096トークン
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded">
+                            <strong>Gemini:</strong> 1M～2Mトークンのコンテキストウィンドウ
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded">
+                            <strong>AI Studio:</strong> モデルによって異なる（Gemini準拠）
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-3"><span class="material-icons" style="font-size: 20px; vertical-align: middle;">tune</span> Temperature設定</h4>
+                    <div class="space-y-3 text-sm">
+                        <div class="p-3 bg-blue-50 border border-blue-400 rounded">
+                            <strong>低温度（0.0-0.3）:</strong>
+                            <p class="mt-1">コード生成、正確な回答が必要な場合</p>
+                        </div>
+                        <div class="p-3 bg-purple-50 border border-purple-400 rounded">
+                            <strong>中温度（0.4-0.7）:</strong>
+                            <p class="mt-1">バランスの取れた創造性と正確性</p>
+                        </div>
+                        <div class="p-3 bg-pink-50 border border-pink-400 rounded">
+                            <strong>高温度（0.8-1.0）:</strong>
+                            <p class="mt-1">アイデア出し、創造的な文章生成</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 p-4 bg-yellow-50 border border-yellow-400 rounded">
+                <p class="text-sm"><strong><span class="material-icons" style="font-size: 16px; vertical-align: middle;">lightbulb</span> バイブコーディングでの推奨：</strong>デフォルト設定のままで問題ありません。特別な調整は不要です。</p>
+            </div>
+        </div>
+
+        <!-- Use Case Recommendations -->
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white border-2 border-black p-6">
+                <h4 class="text-xl font-bold mb-4"><span class="material-icons" style="vertical-align: middle;">edit_note</span> バイブコーディングに最適なツール</h4>
+                <div class="space-y-4">
+                    <div class="p-3 bg-blue-50 border border-blue-400 rounded">
+                        <strong>1. Gemini + Google AI Studio Build</strong>
+                        <p class="text-sm mt-1">段階的な開発とプロトタイピングの組み合わせ</p>
+                    </div>
+                    <div class="p-3 bg-purple-50 border border-purple-400 rounded">
+                        <strong>2. ChatGPT（画像生成が必要な場合）</strong>
+                        <p class="text-sm mt-1">UIデザインやアイコン作成を含む開発</p>
+                    </div>
+                    <div class="p-3 bg-green-50 border border-green-400 rounded">
+                        <strong>3. Claude（複雑なロジック）</strong>
+                        <p class="text-sm mt-1">高度なコード生成と詳細な説明が必要な場合</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white border-2 border-black p-6">
+                <h4 class="text-xl font-bold mb-4"><span class="material-icons" style="vertical-align: middle;">tune</span> シチュエーション別選択ガイド</h4>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-start gap-2">
+                        <span class="material-icons" style="font-size: 18px; color: #16a34a;">check_circle</span>
+                        <div>
+                            <strong>教育現場で即座に使うツール：</strong>
+                            <span class="text-gray-600">Google AI Studio Build</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="material-icons" style="font-size: 18px; color: #16a34a;">check_circle</span>
+                        <div>
+                            <strong>複雑な業務システム：</strong>
+                            <span class="text-gray-600">Gemini or Claude</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="material-icons" style="font-size: 18px; color: #16a34a;">check_circle</span>
+                        <div>
+                            <strong>ビジュアル重視のアプリ：</strong>
+                            <span class="text-gray-600">ChatGPT + DALL-E 3</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="material-icons" style="font-size: 18px; color: #16a34a;">check_circle</span>
+                        <div>
+                            <strong>Google Workspace連携：</strong>
+                            <span class="text-gray-600">Gemini</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Summary & Next Steps -->
+    <section class="container mx-auto px-6 py-20">
+        <div class="bg-black text-white p-12 rounded-lg text-center">
+            <h2 class="text-4xl font-bold mb-6" style="color: var(--electric);"><span class="material-icons" style="font-size: 36px; vertical-align: middle;">rocket_launch</span> まとめと次のステップ</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8 mt-8">
+                <div>
+                    <div class="text-6xl mb-4"><span class="material-icons" style="font-size: 60px;">lightbulb</span></div>
+                    <h3 class="text-xl font-bold mb-2">学んだこと</h3>
+                    <ul class="text-sm text-left">
+                        <li>• バイブコーディングの基礎</li>
+                        <li>• 効果的なプロンプト術</li>
+                        <li>• ツールの使い分け</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-6xl mb-4"><span class="material-icons" style="font-size: 60px;">flag</span></div>
+                    <h3 class="text-xl font-bold mb-2">実践したこと</h3>
+                    <ul class="text-sm text-left">
+                        <li>• Geminiでアプリ開発</li>
+                        <li>• AI Studio Build体験</li>
+                        <li>• Google Sites連携</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-6xl mb-4">🌟</div>
+                    <h3 class="text-xl font-bold mb-2">次のステップ</h3>
+                    <ul class="text-sm text-left">
+                        <li>• 実務での活用</li>
+                        <li>• より複雑なアプリ</li>
+                        <li>• チーム開発への応用</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-12 p-6 bg-gray-800 rounded">
+                <p class="text-lg mb-4">今日学んだ技術を活用して、</p>
+                <p class="text-2xl font-bold" style="color: var(--electric);">あなたのアイデアを形にしていきましょう！</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources -->
+    <section class="container mx-auto px-6 py-12 mb-20">
+        <h2 class="text-3xl font-bold mb-8 text-center"><span class="material-icons" style="vertical-align: middle;">menu_book</span> 参考リソース</h2>
+        
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white border-2 border-black p-6">
+                <h3 class="font-bold mb-3"><span class="material-icons" style="vertical-align: middle;">link</span> ツールリンク</h3>
+                <ul class="space-y-2 text-sm">
+                    <li>• <a href="https://gemini.google.com" class="text-blue-600 underline">Gemini</a></li>
+                    <li>• <a href="https://aistudio.google.com" class="text-blue-600 underline">Google AI Studio</a></li>
+                    <li>• <a href="https://sites.google.com" class="text-blue-600 underline">Google Sites</a></li>
+                    <li>• <a href="https://tailwindcss.com" class="text-blue-600 underline">Tailwind CSS</a></li>
+                </ul>
+            </div>
+            
+            <div class="bg-white border-2 border-black p-6">
+                <h3 class="font-bold mb-3"><span class="material-icons" style="vertical-align: middle;">school</span> 学習リソース</h3>
+                <ul class="space-y-2 text-sm">
+                    <li>• プロンプトエンジニアリング入門</li>
+                    <li>• HTML/CSS/JS基礎</li>
+                    <li>• レスポンシブデザイン</li>
+                    <li>• アクセシビリティ対応</li>
+                </ul>
+            </div>
+            
+            <div class="bg-white border-2 border-black p-6">
+                <h3 class="font-bold mb-3"><span class="material-icons" style="vertical-align: middle;">groups</span> コミュニティ</h3>
+                <ul class="space-y-2 text-sm">
+                    <li>• AI開発者コミュニティ</li>
+                    <li>• バイブコーディング実践者</li>
+                    <li>• 教育×テクノロジー</li>
+                    <li>• オンライン勉強会</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="mb-2 number-label">VIBE CODING COMPLETE TRAINING</p>
+            <p class="text-sm opacity-75">AIと協働する実践開発ガイド</p>
+            <p class="text-xs opacity-50 mt-4">Created with AI × Human Collaboration</p>
+        </div>
+    </footer>
+
+    <script>
+        // Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Copy Code Function
+        function copyCode(button) {
+            const codeBlock = button.parentElement.querySelector('pre');
+            const text = codeBlock.textContent;
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const originalText = button.textContent;
+                    button.textContent = 'COPIED!';
+                    button.style.background = '#FF6B6B';
+                    
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.background = '';
+                    }, 2000);
+                }
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+            
+            document.body.removeChild(textarea);
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Checkbox persistence
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            const id = checkbox.parentElement.textContent.trim();
+            checkbox.checked = localStorage.getItem(`check_${id}`) === 'true';
+            
+            checkbox.addEventListener('change', function() {
+                localStorage.setItem(`check_${id}`, this.checked);
+            });
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
