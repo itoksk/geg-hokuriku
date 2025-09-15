@@ -30,8 +30,8 @@ const ToolComparison = () => {
     },
     {
       name: '音声対話',
-      scores: ['none', 'excellent', 'good', 'limited'],
-      details: ['非対応', '音声モード', 'モバイルアプリ', '限定的']
+      scores: ['good', 'excellent', 'good', 'limited'],
+      details: ['音声モード(ベータ・英語)', '音声モード', 'モバイルアプリ', '限定的']
     },
     {
       name: 'カスタムGPT/Gem',
@@ -174,27 +174,61 @@ const ToolComparison = () => {
               <div className="flex items-start gap-2">
                 <span className="text-electric">1.</span>
                 <div>
-                  <strong>Gemini + Google AI Studio Build</strong>
+                  <strong>Gemini 2.0 + Google AI Studio Build</strong>
                   <p className="text-sm text-gray-600">段階的な開発とプロトタイピングの組み合わせ</p>
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-violet">2.</span>
                 <div>
-                  <strong>ChatGPT（画像生成が必要な場合）</strong>
+                  <strong>ChatGPT 4.5（画像生成が必要な場合）</strong>
                   <p className="text-sm text-gray-600">UIデザインやアイコン作成を含む開発</p>
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-coral">3.</span>
                 <div>
-                  <strong>Claude（複雑なロジック）</strong>
+                  <strong>Claude 3.7 Sonnet（複雑なロジック）</strong>
                   <p className="text-sm text-gray-600">高度なコード生成と詳細な説明が必要な場合</p>
                 </div>
               </div>
             </div>
           </motion.div>
         </div>
+
+        {/* Latest Updates Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.7 }}
+          className="mt-12 p-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200"
+        >
+          <h3 className="font-bold mb-4 flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-electric" />
+            2025年最新アップデート情報
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-semibold text-sm mb-2 text-gray-700">最新モデル</h4>
+              <ul className="space-y-1 text-sm text-gray-600">
+                <li>• <strong>Claude 3.7 Sonnet Pro</strong> - 音声対話ベータ版追加</li>
+                <li>• <strong>GPT-4.5</strong> - マルチモーダル機能強化</li>
+                <li>• <strong>Gemini 2.0</strong> - Google検索統合改善</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-sm mb-2 text-gray-700">料金プラン</h4>
+              <ul className="space-y-1 text-sm text-gray-600">
+                <li>• Claude Pro: $20/月（制限緩和）</li>
+                <li>• ChatGPT Plus: $20/月（GPT-4.5フル機能）</li>
+                <li>• Gemini Advanced: $19.99/月（2TB容量付き）</li>
+              </ul>
+            </div>
+          </div>
+          <p className="text-xs text-gray-500 mt-4">
+            ※ 各AIツールは頻繁にアップデートされるため、最新情報は公式サイトをご確認ください
+          </p>
+        </motion.div>
       </div>
     </section>
   )
