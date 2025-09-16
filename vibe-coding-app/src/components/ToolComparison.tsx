@@ -20,8 +20,8 @@ const ToolComparison = () => {
     },
     {
       name: 'リアルタイム検索',
-      scores: ['none', 'good', 'excellent', 'excellent'],
-      details: ['非対応', 'Web Browsing', 'Google検索統合', 'Google検索統合']
+      scores: ['good', 'good', 'excellent', 'excellent'],
+      details: ['Web検索(ベータ)', 'Web Browsing', 'Google検索統合', 'Google検索統合']
     },
     {
       name: 'ファイル解析',
@@ -34,9 +34,9 @@ const ToolComparison = () => {
       details: ['音声モード(ベータ・英語)', '音声モード', 'モバイルアプリ', '限定的']
     },
     {
-      name: 'カスタムGPT/Gem',
-      scores: ['none', 'excellent', 'excellent', 'none'],
-      details: ['非対応', 'GPTs', 'Gems', '非対応']
+      name: 'カスタムGPT/Gem/Project',
+      scores: ['excellent', 'excellent', 'excellent', 'none'],
+      details: ['Projects', 'GPTs', 'Gems', '非対応']
     },
     {
       name: 'API提供',
@@ -211,7 +211,7 @@ const ToolComparison = () => {
             <div>
               <h4 className="font-semibold text-sm mb-2 text-gray-700">最新モデル</h4>
               <ul className="space-y-1 text-sm text-gray-600">
-                <li>• <strong>Claude 3.7 Sonnet Pro</strong> - 音声対話ベータ版追加</li>
+                <li>• <strong>Claude 3.7 Sonnet Pro</strong> - 音声対話、Web検索、Projects機能追加</li>
                 <li>• <strong>GPT-4.5</strong> - マルチモーダル機能強化</li>
                 <li>• <strong>Gemini 2.0</strong> - Google検索統合改善</li>
               </ul>
